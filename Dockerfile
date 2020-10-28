@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM ubuntu:20.04
 MAINTAINER Proud Heng <proud.heng@gmail.com>
 
 # To build ORB_SLAM2 using this Docker image:
