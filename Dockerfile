@@ -1,14 +1,11 @@
-FROM ubuntu:20.04
+FROM dkimg/opencv:4.5.0-ubuntu
 MAINTAINER Proud Heng <proud.heng@gmail.com>
 
 # To build ORB_SLAM2 using this Docker image:
 # docker run -v ~/docker/ORB_SLAM2/:/ORB_SLAM2/ -w=/ORB_SLAM2/ slam-test /bin/bash -c ./build.sh
 
-ENV OPENCV_VERSION 3.2.0
-ENV OPENCV_DOWNLOAD_URL https://github.com/opencv/opencv/archive/$OPENCV_VERSION.zip
-ENV OpenCV_DIR opencv-$OPENCV_VERSION
 ENV EIGEN_VERSION 3.3.2
-ENV EIGEN_DOWNLOAD_URL http://bitbucket.org/eigen/eigen/get/$EIGEN_VERSION.tar.gz
+ENV EIGEN_DOWNLOAD_URL https://gitlab.com/libeigen/eigen/-/archive/$EIGEN_VERSION/eigen-$EIGEN_VERSION.tar.gz
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   build-essential \
@@ -26,17 +23,6 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   python-numpy \
   unzip 
 
-# install OpenCV
-RUN curl -fsSL "$OPENCV_DOWNLOAD_URL" -o opencv.zip \
-  && unzip opencv.zip \
-  && rm opencv.zip \
-  && cd $OpenCV_DIR \
-  && mkdir release \
-  && cd release \
-  && cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local .. \
-  && make \
-  && make install
-
 # install Eigen
 RUN curl -fsSL "$EIGEN_DOWNLOAD_URL" -o eigen.tar.gz \
   && mkdir /usr/include/eigen \
@@ -53,7 +39,7 @@ RUN git clone https://github.com/stevenlovegrove/Pangolin.git \
   && make
 
 # build ORB-SLAM2
-RUN git clone https://github.com/raulmur/ORB_SLAM2.git ORB_SLAM2 \
+RUN git clone https://github.com/Windfisch/ORB_SLAM2 ORB_SLAM2 \
   && cd ORB_SLAM2 \
   && chmod +x build.sh
 
